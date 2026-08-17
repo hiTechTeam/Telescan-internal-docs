@@ -45,7 +45,9 @@
   TLS trust boundary and availability dependency.
 - A relay, WireGuard, or Moscow-origin failure interrupts normal API traffic.
 - Centralized metrics, alert delivery, cross-host health monitoring, documented
-  log retention, and recurring disaster-recovery drills are incomplete.
+  log retention, and recurring disaster-recovery drills are incomplete. One
+  isolated production MongoDB restore drill passed on August 18, 2026, but an
+  automated schedule and a complete service recovery exercise are still absent.
 - Private-repository merge and secret protections are procedural on the current
   GitHub plan.
 - Shared long-lived service credentials require a documented recurring rotation

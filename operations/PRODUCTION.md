@@ -1,6 +1,6 @@
 # Production Operations
 
-**Last reviewed: August 17, 2026.**
+**Last reviewed: August 18, 2026.**
 
 ## Topology
 
@@ -96,6 +96,22 @@ digest. Upgrade only through a reviewed repository change.
 
 The first production snapshot and restore-to-verification-volume check completed
 on August 16, 2026; timer state was reverified on August 17, 2026.
+
+A full database restore drill completed on August 18, 2026 using off-host Restic
+snapshot `2164bb4b`. The archive checksum passed, `mongorestore` restored 6
+documents with 0 failures into an isolated MongoDB 8 container, all archived
+indexes were recreated, full validation passed for every collection, and a
+temporary least-privilege application user could read the restored database.
+Restore plus validation took 35 seconds for the current small dataset. The drill
+container and its two unique volumes were removed, then production MongoDB, API
+liveness, and backup timer state were rechecked successfully. The evidence is in
+`Telescan-db/ops/restore-drills/2026-08-18.md`.
+
+This is database-restore evidence, not a complete service RTO. The selected
+snapshot was approximately 19 hours 45 minutes old; daily backups therefore
+currently imply up to roughly 24 hours of database RPO exposure. Host rebuild,
+API startup against the restored database, relay or DNS cutover, S3
+reconciliation, and recurring drill scheduling remain separate work.
 
 Never test recovery by dropping the production database. Restore the selected
 snapshot into an isolated database first, validate documents and indexes, then
