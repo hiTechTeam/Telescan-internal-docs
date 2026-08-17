@@ -24,7 +24,8 @@
 - Reissue and securely store any remaining provisional credentials.
 - Add centralized uptime, relay/WireGuard, application, bot, backup, TLS, and
   capacity monitoring with actionable alerts.
-- Run a documented production recovery drill and record recovery objectives.
+- Schedule recurring restore drills and run a complete service recovery exercise;
+  the first isolated production MongoDB restore drill passed on August 18, 2026.
 - Expand physical-device and iOS-version BLE/background testing.
 - Define moderation response ownership, escalation, and retention review.
 
