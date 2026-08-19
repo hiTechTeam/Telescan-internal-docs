@@ -1,6 +1,6 @@
 # Telescan System Architecture
 
-**Last reviewed: August 17, 2026.**
+**Last reviewed: August 19, 2026.**
 
 ## Product boundary
 
@@ -23,12 +23,14 @@ BLE signal strength, estimated distance, or movement history to the backend.
   talks only to the moderation API.
 - **API:** owns every application collection and all profile-photo operations.
 - **MongoDB:** stores users, link codes, sessions, confirmation requests,
-  reports, and blocks.
+  reports, blocks, and shared rate-limit counters.
 - **Photo storage:** stores API-owned profile-photo objects.
 - **Moscow nginx:** serves the main domain, enforces the public route policy, and
   exposes a WireGuard-only API origin.
 - **EU relay:** terminates public API TLS in the Netherlands and forwards to the
   Moscow origin through WireGuard.
+- **Monitoring:** collects cross-host metrics and logs over a separate
+  WireGuard network, evaluates alerts, and delivers them through Telegram.
 
 ```mermaid
 flowchart LR
@@ -45,6 +47,9 @@ flowchart LR
     API -->|"Confirmation notification"| BOT
     API --> DB[("MongoDB")]
     API --> S3[("Photo storage")]
+    ORIGIN -.->|"metrics and logs"| MON["Monitoring"]
+    RELAY -.->|"metrics and logs"| MON
+    MON -->|"alerts"| TG["Telegram"]
 ```
 
 ## Account linking and sessions
@@ -130,3 +135,8 @@ reachable only through the API loopback port and an administrative SSH tunnel.
 The API and MongoDB ports are published only on the Moscow loopback interface.
 The WireGuard origin listener is restricted to the EU peer and must never bind
 to a public interface.
+
+Prometheus and Loki ingest only through the dedicated `wg-monitor` network.
+Grafana is available through an administrator SSH tunnel. Telegram alert
+delivery uses a domain-restricted proxy on the EU host; it is not a general
+public egress service.

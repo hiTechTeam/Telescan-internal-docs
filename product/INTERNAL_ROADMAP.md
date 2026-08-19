@@ -1,6 +1,6 @@
 # Internal Roadmap
 
-**Last reviewed: August 17, 2026.**
+**Last reviewed: August 19, 2026.**
 
 ## Completed production foundations
 
@@ -15,18 +15,20 @@
 - Hardened application containers and production SSH hosts.
 - Least-privilege MongoDB application user.
 - Automated TLS renewal and encrypted, restore-validated database backups.
+- Shared MongoDB-backed rate limiting for abuse-sensitive API flows.
+- Dedicated metrics, logs, dashboards, cross-host telemetry, and Telegram
+  alerts.
+- Successful isolated restore of a real encrypted production MongoDB snapshot.
 - Ruff, Pyright, pytest, Docker, and iOS CI coverage appropriate to each repo.
 
 ## Before broad public launch
 
 - Obtain the Apple Developer account, configure production signing, and complete
   TestFlight/App Store review assets and privacy declarations.
-- Reissue and securely store any remaining provisional credentials.
-- Add centralized uptime, relay/WireGuard, application, bot, backup, TLS, and
-  capacity monitoring with actionable alerts.
-- Schedule recurring restore drills and run a complete service recovery exercise;
-  the first isolated production MongoDB restore drill passed on August 18, 2026.
-- Expand physical-device and iOS-version BLE/background testing.
+- Schedule recurring restore drills and run a complete service recovery
+  exercise.
+- Complete release-candidate regression, accessibility, and TestFlight testing.
+- Calibrate monitoring thresholds under normal production traffic.
 - Define moderation response ownership, escalation, and retention review.
 
 ## Next engineering priorities
@@ -34,11 +36,10 @@
 | Area | Work | State |
 | --- | --- | --- |
 | Migration | Disable legacy API after supported-client adoption and remove legacy code hashes | Rollout required |
-| Rate limiting | Replace process-local state with a shared adapter before horizontal scaling | Planned |
 | API quality | Replace deprecated `ORJSONResponse`; expand MongoDB/S3 integration and contract tests | Planned |
 | BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |
 | Notifications | Add APNs only after Apple account availability and a clear aggregation/privacy design | Deferred |
-| Moderation | Build a dedicated admin service with roles, search, audit, and appeals | Planned |
+| Moderation | Add case search, roles, and appeals only when usage requires them | Later |
 | Repository controls | Upgrade plan or add independent enforcement for private-repo PR/CI/secret gates | Planned |
 | Android | Implement only after the BLE contract is versioned and stable | Later |
 
@@ -55,5 +56,4 @@
 
 `Telescan-info` contains public product and legal material only. Architecture,
 operations, risks, moderation internals, deployment details, and engineering
-roadmap belong in this private repository. A separate public UI laboratory may
-be created later under its own license and trademark rules.
+roadmap belong in this private repository.

@@ -1,6 +1,6 @@
 # Production Operations
 
-**Last reviewed: August 18, 2026.**
+**Last reviewed: August 19, 2026.**
 
 ## Topology
 
@@ -11,6 +11,8 @@
 | Moscow API | `127.0.0.1:8000` | FastAPI loopback publication only |
 | Moscow MongoDB | `127.0.0.1:27017` | MongoDB loopback publication only |
 | WireGuard origin | `10.77.0.1:8081` | nginx listener restricted to the EU peer |
+| Monitoring | `84.201.181.214` | Grafana, Prometheus, Loki, and Alloy; UI bound to loopback |
+| Monitoring network | `10.78.0.0/24` | Dedicated WireGuard transport for metrics and logs |
 
 Normal API flow:
 
@@ -63,6 +65,8 @@ lifecycle and recovery.
   configuration validation, and nginx deployment.
 - `Telescan-relay` uploads a release over SSH, verifies immutable systemd units,
   rebuilds the relay, and runs end-to-end relay checks.
+- `Telescan-monitoring` deploys the central observability stack after CI and
+  verifies service readiness, production telemetry, and Telegram egress.
 
 Deployment credentials belong to GitHub production environments. Runtime
 secrets stay in mode-`600` host `.env` files. Never copy them into images,
@@ -71,8 +75,7 @@ documentation, Actions logs, or repository secrets shared with unrelated jobs.
 ## TLS renewal
 
 Moscow and EU each run a systemd timer twice daily with a randomized delay.
-Certbot reloads nginx only after a successful renewal. Both timers and the EU
-dry run were verified on August 17, 2026.
+Certbot reloads nginx only after a successful renewal.
 
 Operational checks:
 
@@ -94,24 +97,16 @@ digest. Upgrade only through a reviewed repository change.
 4. downloads and validates the latest snapshot;
 5. retains 7 daily, 5 weekly, and 12 monthly snapshots.
 
-The first production snapshot and restore-to-verification-volume check completed
-on August 16, 2026; timer state was reverified on August 17, 2026.
-
-A full database restore drill completed on August 18, 2026 using off-host Restic
-snapshot `2164bb4b`. The archive checksum passed, `mongorestore` restored 6
-documents with 0 failures into an isolated MongoDB 8 container, all archived
-indexes were recreated, full validation passed for every collection, and a
-temporary least-privilege application user could read the restored database.
-Restore plus validation took 35 seconds for the current small dataset. The drill
-container and its two unique volumes were removed, then production MongoDB, API
-liveness, and backup timer state were rechecked successfully. The evidence is in
+Daily snapshots are restore-validated before retention is applied. A full
+isolated restore of a real encrypted production snapshot passed on August 18,
+2026, including checksums, indexes, collection validation, and reads through a
+temporary least-privilege application account. Detailed evidence is in
 `Telescan-db/ops/restore-drills/2026-08-18.md`.
 
-This is database-restore evidence, not a complete service RTO. The selected
-snapshot was approximately 19 hours 45 minutes old; daily backups therefore
-currently imply up to roughly 24 hours of database RPO exposure. Host rebuild,
-API startup against the restored database, relay or DNS cutover, S3
-reconciliation, and recurring drill scheduling remain separate work.
+The drill proves database restoration, not a complete service RTO. Daily
+backups currently imply up to roughly 24 hours of database RPO exposure; host
+rebuild, service startup, storage reconciliation, and traffic cutover remain
+part of a future full recovery exercise.
 
 Never test recovery by dropping the production database. Restore the selected
 snapshot into an isolated database first, validate documents and indexes, then
@@ -142,13 +137,14 @@ policies, and health checks appropriate to each service.
 Do not regenerate WireGuard keys, rotate service secrets, replace DNS, or restore
 the database during an ordinary application deployment.
 
-## Minimum monitoring still required
+## Monitoring
 
-- external API and legal-page availability;
-- relay-to-origin and WireGuard health;
-- API latency/error rate and container restarts;
-- bot polling health;
-- MongoDB capacity and backup freshness;
-- TLS-expiry and timer failures;
-- centralized log retention and alert delivery;
-- scheduled disaster-recovery drills.
+The dedicated monitoring host runs Grafana, Prometheus, Loki, and Alloy.
+Production agents send host, container, timer, backup, and WireGuard telemetry
+through `wg-monitor`; application logs are centralized in Loki. Provisioned
+alerts cover endpoint failures, missing telemetry, unhealthy containers, backup
+freshness, timers, WireGuard handshakes, and host capacity. Telegram delivery
+uses a restricted EU egress proxy.
+
+Remaining operational work is to calibrate alert noise under real traffic and
+schedule recurring full recovery exercises.

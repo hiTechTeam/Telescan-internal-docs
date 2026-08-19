@@ -1,6 +1,6 @@
 # Security Model
 
-**Last reviewed: August 17, 2026.**
+**Last reviewed: August 19, 2026.**
 
 ## Trust boundaries
 
@@ -20,7 +20,8 @@
 - Short-lived access JWTs, rotating refresh tokens, and active session checks on
   every protected request.
 - Constant-time verification for bot and moderation service credentials.
-- Idempotency keys and authenticated-user rate limits on abuse-sensitive flows.
+- Idempotency keys and shared MongoDB-backed rate limits on abuse-sensitive
+  flows.
 - Server-side bidirectional block enforcement and report snapshots for audit.
 - Production startup rejection of development secrets and wildcard/empty CORS.
 - Public `404` policy for internal services and Swagger/OpenAPI paths at both
@@ -35,6 +36,8 @@
 - Root/password/keyboard-interactive SSH and X11 disabled; Fail2ban enabled.
 - Client-side encrypted, off-host MongoDB backups with automated restore
   validation and retention.
+- Dedicated cross-host metrics and log collection with provisioned alerts and
+  restricted Telegram delivery.
 - App-only UserDefaults declaration in the iOS privacy manifest and no
   advertising or third-party analytics SDK.
 
