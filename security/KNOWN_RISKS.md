@@ -1,6 +1,6 @@
 # Known Technical Risks
 
-**Last reviewed: August 17, 2026.**
+**Last reviewed: August 19, 2026.**
 
 ## BLE and client behavior
 
@@ -17,8 +17,8 @@
 
 - Authenticated users who learn a valid Telescan ID can request that profile;
   the API does not independently prove physical proximity.
-- Rate limiting is process-local, resets on restart, and is not shared between
-  replicas. Add a shared adapter before horizontal scaling.
+- Rate limiting uses shared MongoDB fixed-window counters. Limits and indexes
+  still require recalibration as traffic patterns change.
 - FastAPI 0.141.1 warns that `ORJSONResponse` is deprecated. Responses and tests
   currently work; migrate before the compatibility class is removed.
 - Legacy `/v1` behavior remains behind a feature flag for migration. Enabling it
@@ -44,10 +44,10 @@
 - The EU relay improves routing for users behind VPNs but creates an additional
   TLS trust boundary and availability dependency.
 - A relay, WireGuard, or Moscow-origin failure interrupts normal API traffic.
-- Centralized metrics, alert delivery, cross-host health monitoring, documented
-  log retention, and recurring disaster-recovery drills are incomplete. One
-  isolated production MongoDB restore drill passed on August 18, 2026, but an
-  automated schedule and a complete service recovery exercise are still absent.
+- Metrics, logs, cross-host health monitoring, and Telegram alert delivery are
+  centralized. Alert thresholds still need production burn-in and tuning.
+- One isolated production MongoDB restore drill passed on August 18, 2026, but
+  recurring full-service recovery exercises are not yet scheduled.
 - Private-repository merge and secret protections are procedural on the current
   GitHub plan.
 - Shared long-lived service credentials require a documented recurring rotation

@@ -1,6 +1,6 @@
 # Moderation Workflow
 
-**Last reviewed: August 17, 2026.**
+**Last reviewed: August 19, 2026.**
 
 ## Current model
 
@@ -37,9 +37,8 @@ only the private moderation API and a credential distinct from the user bot.
 - Escalate credible safety, fraud, or legal concerns outside the bot workflow.
 - Revoke the admin bot token immediately if exposed and verify the allow-list.
 
-## Planned admin service
+## Future expansion
 
-A separate admin service/repository may later add authentication, searchable
-case history, assignment, audit export, role separation, metrics, and appeals.
-Until then the API remains the source of truth and the Telegram bot is only a
-restricted presentation layer.
+Searchable case history, assignment, role separation, metrics, and appeals can
+be added when moderation volume requires them. The API remains the source of
+truth and the Telegram bot remains a restricted presentation layer.

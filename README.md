@@ -1,6 +1,6 @@
 # Telescan Internal Documentation
 
-**Private repository. Last reviewed: August 17, 2026.**
+**Private repository. Last reviewed: August 19, 2026.**
 
 This repository contains the non-public technical and operational documentation
 for Telescan. It is the cross-repository source of truth for architecture,
@@ -31,6 +31,7 @@ in GitHub environments or on the production hosts.
 | `Telescan-db` | MongoDB runtime, application user, encrypted backup and recovery automation |
 | `Telescan-nginx` | Moscow edge, private origin, TLS policy, host hardening, Swagger boundary |
 | `Telescan-relay` | Netherlands HTTPS edge and WireGuard forwarding to Moscow |
+| `Telescan-monitoring` | Metrics, logs, dashboards, alerts, and monitoring network |
 | `Telescan-info` | Public product, privacy, terms, security-contact, and roadmap information only |
 
 Repository-specific commands, environment-variable names, CI behavior, and
