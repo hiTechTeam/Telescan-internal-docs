@@ -9,7 +9,8 @@ profile sheet. Report and block behavior is enforced by the API; the iOS menu is
 not the source of truth.
 
 Reports contain a random report ID, reporter and target internal references,
-public Telescan IDs, reason, optional comment, captured target profile context,
+public Telescan IDs, reason, optional comment, captured target name, username,
+BIO and photo context,
 status, timestamps, moderator actor, and optional moderator note. The reported
 user is not shown the reporter's identity.
 

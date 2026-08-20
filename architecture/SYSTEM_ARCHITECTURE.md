@@ -21,7 +21,8 @@ BLE signal strength, estimated distance, or movement history to the backend.
   issue a one-time link code, and delivers server-side confirmation messages.
 - **Admin bot:** exposes report queues to an explicit Telegram ID allow-list and
   talks only to the moderation API.
-- **API:** owns every application collection and all profile-photo operations.
+- **API:** owns every application collection, the optional 120-character BIO,
+  and all profile-photo operations.
 - **MongoDB:** stores users, link codes, sessions, confirmation requests,
   reports, blocks, and shared rate-limit counters.
 - **Photo storage:** stores API-owned profile-photo objects.
@@ -81,7 +82,7 @@ payload used by CoreBluetooth. The scanner parses the compact identifier and
 resolves it through `GET /api/v1/profiles/{telescan_id}`.
 
 A nearby candidate is presented only after the API returns a matching accessible
-profile with a usable Telegram username. Incomplete responses must never produce
+profile with a usable Telegram username and optional BIO. Incomplete responses must never produce
 an `Unknown` row. Signal strength and approximate distance are local hints only.
 
 The nearby list retains a profile briefly after signal loss to absorb BLE gaps.
@@ -91,7 +92,8 @@ profiles and must not increment the nearby badge.
 ## Reports and blocks
 
 `POST /api/v1/reports` accepts an idempotency UUID, target Telescan ID, reason,
-and optional context. The API captures a target profile snapshot and stores the
+and optional context. The API captures the target name, username, BIO, and photo
+snapshot and stores the
 moderation lifecycle independently of the live profile.
 
 Blocking is enforced server-side in both profile-lookup directions. iOS removes
