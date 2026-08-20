@@ -1,6 +1,6 @@
 # Telescan Internal Documentation
 
-**Private repository. Last reviewed: August 19, 2026.**
+**Private repository. Last reviewed: August 20, 2026.**
 
 This repository contains the non-public technical and operational documentation
 for Telescan. It is the cross-repository source of truth for architecture,
@@ -18,6 +18,7 @@ in GitHub environments or on the production hosts.
 - [Security model](security/SECURITY_MODEL.md)
 - [Known technical risks](security/KNOWN_RISKS.md)
 - [Moderation workflow](product/MODERATION.md)
+- [App Review runbook](product/APP_REVIEW.md)
 - [Internal roadmap](product/INTERNAL_ROADMAP.md)
 
 ## Repository ownership
