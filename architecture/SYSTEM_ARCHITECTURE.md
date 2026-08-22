@@ -21,7 +21,7 @@ BLE signal strength, estimated distance, or movement history to the backend.
   issue a one-time link code, and delivers server-side confirmation messages.
 - **Admin bot:** exposes report queues to an explicit Telegram ID allow-list and
   talks only to the moderation API.
-- **API:** owns every application collection, the optional 120-character BIO,
+- **API:** owns every application collection, the optional 60-character BIO,
   and all profile-photo operations.
 - **MongoDB:** stores users, link codes, sessions, confirmation requests,
   reports, blocks, and shared rate-limit counters.
