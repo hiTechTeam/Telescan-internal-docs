@@ -56,9 +56,9 @@
   GitHub plan.
 - Shared long-lived service credentials require a documented recurring rotation
   schedule and incident drill.
-- Several application workflows still reference third-party Actions by moving
-  major-version tags, and Python application images fetch the uv installer at
-  build time without a committed checksum. Pin reviewed Actions and build
-  inputs before treating the software supply chain as fully reproducible.
+- Python application images fetch the uv installer at build time without a
+  committed checksum, and their base images are not digest-pinned. Pin reviewed
+  image and installer inputs before treating application builds as fully
+  reproducible.
 - Dependabot vulnerability alerts are disabled for `Telescan-monitoring`, so
   its pinned container-image updates currently depend on manual review.

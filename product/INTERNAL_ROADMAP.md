@@ -40,7 +40,7 @@
 | --- | --- | --- |
 | Migration | Disable legacy API after supported-client adoption and remove legacy code hashes | Rollout required |
 | API quality | Replace deprecated `ORJSONResponse`; expand MongoDB/S3 integration and contract tests | Planned |
-| Supply chain | Enable monitoring dependency alerts and pin third-party Actions and Python image/build inputs to reviewed immutable revisions | Planned |
+| Supply chain | Enable monitoring dependency alerts and pin Python image/build inputs to reviewed immutable revisions | Planned |
 | BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |
 | Notifications | Add APNs only after Apple account availability and a clear aggregation/privacy design | Deferred |
 | Moderation | Add case search, roles, and appeals only when usage requires them | Later |
