@@ -1,6 +1,6 @@
 # Telescan System Architecture
 
-**Last reviewed: August 19, 2026.**
+**Last reviewed: August 24, 2026.**
 
 ## Product boundary
 
@@ -10,21 +10,23 @@ to share. BLE performs local discovery; the backend owns identity, sessions,
 profiles, photos, reports, and blocks.
 
 The system does not read Telegram messages or contacts and does not send GPS,
-BLE signal strength, estimated distance, or movement history to the backend.
+BLE signal strength, estimated distance, or the device-local encounter history
+to the backend.
 
 ## Components
 
 - **iOS client:** advertises and scans a compact stable Telescan identifier,
   resolves complete profiles through the authenticated API, caches the current
-  account and block list, and owns all nearby-distance presentation.
+  account and block list, and owns nearby-distance presentation and the local
+  24-hour **Met** encounter history.
 - **User bot:** reads the user's current public Telegram profile, asks the API to
   issue a one-time link code, and delivers server-side confirmation messages.
 - **Admin bot:** exposes report queues to an explicit Telegram ID allow-list and
   talks only to the moderation API.
 - **API:** owns every application collection, the optional 60-character BIO,
   and all profile-photo operations.
-- **MongoDB:** stores users, link codes, sessions, confirmation requests,
-  reports, blocks, and shared rate-limit counters.
+- **MongoDB:** stores users, normal and App Review link codes, sessions,
+  confirmation requests, reports, blocks, and shared rate-limit counters.
 - **Photo storage:** stores API-owned profile-photo objects.
 - **Moscow nginx:** serves the main domain, enforces the public route policy, and
   exposes a WireGuard-only API origin.
@@ -76,18 +78,29 @@ remote logout again until reliable client delivery is available.
 
 ## BLE discovery contract
 
-BLE advertisements carry the stable random `telescan_id`, not the short-lived
-Telegram link code and not a username. The value fits the effective local-name
-payload used by CoreBluetooth. The scanner parses the compact identifier and
-resolves it through `GET /api/v1/profiles/{telescan_id}`.
+BLE advertisements expose only the fixed Telescan service UUID. The stable
+random `telescan_id` is read as 16 lossless bytes from the compact identity
+characteristic; the compatibility characteristic also exposes lowercase UUID
+text for staged upgrades. Neither the short-lived Telegram link code nor the
+username is advertised. The scanner resolves the identifier through
+`GET /api/v1/profiles/{telescan_id}`.
 
 A nearby candidate is presented only after the API returns a matching accessible
-profile with a usable Telegram username and optional BIO. Incomplete responses must never produce
-an `Unknown` row. Signal strength and approximate distance are local hints only.
+profile with a usable Telegram username and optional BIO. Incomplete responses
+must never produce an `Unknown` row. Signal strength and approximate distance
+are local hints only. Rows retain discovery order, while displayed distance is
+recalculated every 10 seconds from local RSSI samples.
 
-The nearby list retains a profile briefly after signal loss to absorb BLE gaps.
-The UI shows the remaining expiry time. Network failure suppresses unresolved
-profiles and must not increment the nearby badge.
+The nearby list retains a profile for 60 seconds after signal loss to absorb BLE
+gaps. The UI shows the remaining expiry time. Network failure suppresses
+unresolved profiles and must not increment the nearby badge.
+
+When a resolved profile leaves **Nearby**, iOS exposes it in **Met** for up to
+24 hours. The profile snapshot and last-seen timestamp are stored in
+`UserDefaults`, capped at 500 entries, and are never uploaded. Current nearby
+profiles are filtered from the history so the same person cannot appear in both
+tabs. Blocking removes the entry; manual clearing, sign-out, and account
+deletion clear the local history.
 
 ## Reports and blocks
 
@@ -127,6 +140,9 @@ Account deletion revokes sessions first, then removes photos, link codes,
 confirmation requests, blocks, device sessions, and the user record. Abuse
 reports remain for the limited moderation period with direct account relations
 removed. Resolved or dismissed reports expire through a 180-day TTL.
+
+The device-local encounter history is outside the API data model and is cleared
+by the iOS client during sign-out and account deletion.
 
 ## Public network boundary
 

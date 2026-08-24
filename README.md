@@ -1,6 +1,6 @@
 # Telescan Internal Documentation
 
-**Private repository. Last reviewed: August 20, 2026.**
+**Private repository. Last reviewed: August 24, 2026.**
 
 This repository contains the non-public technical and operational documentation
 for Telescan. It is the cross-repository source of truth for architecture,
@@ -25,7 +25,7 @@ in GitHub environments or on the production hosts.
 
 | Repository | Responsibility |
 | --- | --- |
-| `Telescan-iOS` | SwiftUI client, device sessions, BLE discovery, local cache, reports and blocks UI |
+| `Telescan-iOS` | SwiftUI client, device sessions, BLE discovery, device-local encounter history, reports and blocks UI |
 | `Telescan-bot-app` | Telegram presentation, profile synchronization, link-code requests, confirmation messages |
 | `Telescan-admin-bot` | Allow-listed Telegram moderation interface |
 | `Telescan-api` | Authentication, authorization, profiles, photos, reports, blocks, and data ownership |

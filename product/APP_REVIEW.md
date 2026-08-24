@@ -1,6 +1,6 @@
 # App Review Runbook
 
-**Last reviewed: August 20, 2026.**
+**Last reviewed: August 24, 2026.**
 
 ## Review setup
 
@@ -68,11 +68,11 @@ REVIEW_B_CODE_4
 REVIEW_B_CODE_5
 
 Bluetooth discovery requires two physical devices. Demonstration video:
-BLE_VIDEO_URL
+https://github.com/user-attachments/assets/a3910e7c-c475-40b3-a3c3-43ab5ea79c30
 
 Privacy Policy: https://tgtelescan.ru/privacy
 Terms of Service: https://tgtelescan.ru/terms
-Support contact: REVIEW_CONTACT
+Support contact: admin@tgtelescan.ru
 ```
 
 ## Final checks

@@ -1,6 +1,6 @@
 # Security Model
 
-**Last reviewed: August 19, 2026.**
+**Last reviewed: August 24, 2026.**
 
 ## Trust boundaries
 
@@ -38,8 +38,9 @@
   validation and retention.
 - Dedicated cross-host metrics and log collection with provisioned alerts and
   restricted Telegram delivery.
-- App-only UserDefaults declaration in the iOS privacy manifest and no
-  advertising or third-party analytics SDK.
+- App-only UserDefaults declaration in the iOS privacy manifest, a bounded
+  24-hour device-local encounter history, and no advertising or third-party
+  analytics SDK.
 
 ## BLE threat model
 
@@ -71,9 +72,11 @@ and revoke it at the source rather than merely deleting the text.
 
 ## Repository controls
 
-Dependabot vulnerability alerts and security updates are enabled across the
-repositories. The public information repository protects `main` and enables
-secret scanning with push protection.
+Dependabot vulnerability alerts report no open findings in the application,
+database, edge, relay, iOS, and public-information repositories. They are
+currently disabled for `Telescan-monitoring` and the dependency-free internal
+documentation repository. The public information repository protects `main`
+and enables secret scanning with push protection.
 
 The implementation repositories are private. On the current GitHub plan they
 cannot enforce branch protection, required checks, secret scanning, or push

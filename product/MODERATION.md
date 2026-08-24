@@ -1,6 +1,6 @@
 # Moderation Workflow
 
-**Last reviewed: August 19, 2026.**
+**Last reviewed: August 24, 2026.**
 
 ## Current model
 

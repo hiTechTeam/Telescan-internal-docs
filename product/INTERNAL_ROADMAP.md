@@ -1,6 +1,6 @@
 # Internal Roadmap
 
-**Last reviewed: August 19, 2026.**
+**Last reviewed: August 24, 2026.**
 
 ## Completed production foundations
 
@@ -9,6 +9,9 @@
 - BLE discovery using a payload-safe Telescan identifier and complete-profile
   validation before presentation.
 - Nearby expiry UX in list and expanded profile views.
+- Stable discovery-order rows, 10-second distance refresh, and a device-local
+  24-hour history shown only after a profile leaves the nearby list.
+- Optional 60-character BIO in the account profile and nearby cards.
 - User reports, blocks, unblock management, and allow-listed moderation bot.
 - EU HTTPS relay and encrypted WireGuard origin path.
 - Public route denial for internal API and Swagger paths.
@@ -37,6 +40,7 @@
 | --- | --- | --- |
 | Migration | Disable legacy API after supported-client adoption and remove legacy code hashes | Rollout required |
 | API quality | Replace deprecated `ORJSONResponse`; expand MongoDB/S3 integration and contract tests | Planned |
+| Supply chain | Enable monitoring dependency alerts and pin third-party Actions and Python image/build inputs to reviewed immutable revisions | Planned |
 | BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |
 | Notifications | Add APNs only after Apple account availability and a clear aggregation/privacy design | Deferred |
 | Moderation | Add case search, roles, and appeals only when usage requires them | Later |
