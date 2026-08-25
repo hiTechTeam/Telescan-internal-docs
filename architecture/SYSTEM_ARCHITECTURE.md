@@ -57,20 +57,27 @@ flowchart LR
 
 ## Account linking and sessions
 
-1. The user requests a code from the Telegram bot.
-2. The bot submits the current Telegram ID, name, username, and explicit photo
+1. iOS authenticates the primary Telescan account with Sign in with Apple.
+   The API verifies the identity-token signature, issuer, audience, expiry, and
+   nonce, then returns the device access and refresh tokens.
+2. The user requests a code from the Telegram bot.
+3. The bot submits the current Telegram ID, name, username, and explicit photo
    state to the internal API.
-3. The API creates or updates the account and issues a random eight-character
-   code. Only an HMAC-SHA-256 digest is stored in the normal model.
-4. iOS submits the clear code with a random installation `device_id`.
-5. The API atomically consumes the code and returns a short-lived access JWT, a
-   rotating refresh token, the random public `telescan_id`, and the shared
-   profile.
+4. The API creates or updates the pending Telegram profile and issues a random
+   eight-character code. Only an HMAC-SHA-256 digest is stored.
+5. iOS submits the clear code to the authenticated Telegram-link endpoint.
+6. The API atomically consumes the code, attaches the Telegram identity to the
+   Apple-authenticated account, and returns the shared profile plus a replacement
+   access JWT for the same device session. The existing refresh token remains
+   valid; a Telegram code can never create a session by itself.
 
 The refresh token is stored only as a SHA-256 digest server-side and rotates on
 every refresh. Reuse revokes the affected device session. Every protected
-request validates both the JWT and the active session, so current-device logout
-and account deletion take effect immediately.
+request validates the JWT, active session, and attached Apple identity, so a
+legacy Telegram-only session cannot authorize the client. The rollout migration
+revokes such legacy sessions without deleting their profiles; the first Apple
+sign-in and Telegram link adopts the existing profile and public Telescan ID.
+Current-device logout and account deletion take effect immediately.
 
 The server retains the older logout-all confirmation contract, but the current
 iOS MVP exposes current-device logout and account deletion only. Do not expose
@@ -122,8 +129,8 @@ decision.
 
 | Surface | Examples | Authorization |
 | --- | --- | --- |
-| Public bootstrap/legal | `/privacy`, `/terms`, `/api/v1/auth/link`, `/api/v1/auth/refresh` | Public document, one-time code, or refresh token |
-| iOS account/session | `/api/v1/auth/session`, `/api/v1/users/me` | Active access JWT and device session |
+| Public bootstrap/legal | `/privacy`, `/terms`, `/api/v1/auth/apple`, `/api/v1/auth/refresh` | Public document, Apple identity token, or refresh token |
+| iOS account/session | `/api/v1/auth/session`, `/api/v1/users/me`, `/api/v1/users/me/telegram/link` | Active access JWT and device session |
 | Nearby/moderation actions | `/api/v1/profiles/...`, `/api/v1/reports`, `/api/v1/users/me/blocks...` | Active access JWT and device session |
 | User-bot service | `/internal/v1/link-codes`, confirmation routes | `BOT_SERVICE_SECRET` |
 | Admin moderation | `/internal/v1/moderation/reports...` | `MODERATION_SERVICE_SECRET` |
@@ -136,7 +143,8 @@ OpenAPI. Remove them and legacy code hashes after supported-client adoption.
 The API is the only service that reads or writes MongoDB and photo storage.
 Application clients never receive database or object-storage credentials.
 
-Account deletion revokes sessions first, then removes photos, link codes,
+Account deletion revokes sessions first, then removes the Apple identity,
+photos, link codes,
 confirmation requests, blocks, device sessions, and the user record. Abuse
 reports remain for the limited moderation period with direct account relations
 removed. Resolved or dismissed reports expire through a 180-day TTL.
