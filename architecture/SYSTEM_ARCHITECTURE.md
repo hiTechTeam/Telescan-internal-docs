@@ -98,17 +98,17 @@ must never produce an `Unknown` row. Signal strength and approximate distance
 are local hints only. Rows retain discovery order, while displayed distance is
 recalculated every 10 seconds from local RSSI samples.
 
-The nearby list retains a profile for 60 seconds after signal loss to absorb BLE
-gaps. The UI shows the remaining expiry time. Network failure suppresses
-unresolved profiles and must not increment the nearby badge.
+A resolved nearby profile starts a 60-second heartbeat buffer that is refreshed
+by every BLE signal. During signal silence the UI shows the remaining expiry
+time. When the buffer expires, iOS removes the profile from **Nearby** and
+upserts it into **Met** using the last real signal timestamp. Network failure
+suppresses unresolved profiles and must not increment the nearby badge.
 
-When a resolved profile leaves **Nearby**, iOS waits five minutes before adding
-it to **Met**, cancelling the pending addition if the profile reappears. The
-profile snapshot and last-seen timestamp remain in `UserDefaults` for up to
+The profile snapshot and last-seen timestamp remain in `UserDefaults` for up to
 24 hours and are never uploaded. A later nearby discovery does not remove the
 existing history entry; the last-seen value is replaced after the next confirmed
-separation. Blocking removes the entry; manual clearing, sign-out, and account
-deletion clear the local history.
+heartbeat expiry. Blocking removes the entry; manual clearing, sign-out, and
+account deletion clear the local history.
 
 ## Reports and blocks
 
