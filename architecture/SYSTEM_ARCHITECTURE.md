@@ -107,6 +107,13 @@ iOS terminates the process first, the remaining buffer entries are moved into
 **Met** on the next launch before BLE scanning restarts. Network failure
 suppresses unresolved profiles and must not increment the nearby badge.
 
+When both iOS apps are suspended, Core Bluetooth coalesces duplicate scan events
+and may extend discovery intervals. The client therefore leaves background
+identity connections pending for the system to complete, restores `.connecting`
+peripherals into the resolution pipeline after a process relaunch, and performs
+only bounded retries after background GATT failures. The eight-second identity
+timeout applies only while the app is active.
+
 The profile snapshot and last-seen timestamp remain in `UserDefaults` for up to
 24 hours and are never uploaded. A later nearby discovery does not remove the
 existing history entry; the last-seen value is replaced after the next confirmed
