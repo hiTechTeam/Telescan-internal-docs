@@ -10,7 +10,8 @@
   validation before presentation.
 - Nearby expiry UX in list and expanded profile views.
 - Stable discovery-order rows, 10-second distance refresh, and a device-local
-  24-hour history populated after a one-minute BLE heartbeat timeout.
+  24-hour history populated after a one-minute BLE heartbeat timeout, with a
+  persistent pre-history buffer recovered before scanning after app termination.
 - Optional 36-character BIO in the account profile and nearby cards.
 - User reports, blocks, unblock management, and allow-listed moderation bot.
 - EU HTTPS relay and encrypted WireGuard origin path.
