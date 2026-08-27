@@ -1,6 +1,6 @@
 # Telescan System Architecture
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: August 27, 2026.**
 
 ## Product boundary
 
@@ -23,7 +23,7 @@ to the backend.
   issue a one-time link code, and delivers server-side confirmation messages.
 - **Admin bot:** exposes report queues to an explicit Telegram ID allow-list and
   talks only to the moderation API.
-- **API:** owns every application collection, the optional 60-character BIO,
+- **API:** owns every application collection, the optional 36-character BIO,
   and all profile-photo operations.
 - **MongoDB:** stores users, normal and App Review link codes, sessions,
   confirmation requests, reports, blocks, and shared rate-limit counters.
@@ -102,11 +102,12 @@ The nearby list retains a profile for 60 seconds after signal loss to absorb BLE
 gaps. The UI shows the remaining expiry time. Network failure suppresses
 unresolved profiles and must not increment the nearby badge.
 
-When a resolved profile leaves **Nearby**, iOS exposes it in **Met** for up to
-24 hours. The profile snapshot and last-seen timestamp are stored in
-`UserDefaults`, capped at 500 entries, and are never uploaded. Current nearby
-profiles are filtered from the history so the same person cannot appear in both
-tabs. Blocking removes the entry; manual clearing, sign-out, and account
+When a resolved profile leaves **Nearby**, iOS waits five minutes before adding
+it to **Met**, cancelling the pending addition if the profile reappears. The
+profile snapshot and last-seen timestamp remain in `UserDefaults` for up to
+24 hours and are never uploaded. A later nearby discovery does not remove the
+existing history entry; the last-seen value is replaced after the next confirmed
+separation. Blocking removes the entry; manual clearing, sign-out, and account
 deletion clear the local history.
 
 ## Reports and blocks

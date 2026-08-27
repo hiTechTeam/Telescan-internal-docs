@@ -1,6 +1,6 @@
 # Internal Roadmap
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: August 27, 2026.**
 
 ## Completed production foundations
 
@@ -10,8 +10,8 @@
   validation before presentation.
 - Nearby expiry UX in list and expanded profile views.
 - Stable discovery-order rows, 10-second distance refresh, and a device-local
-  24-hour history shown only after a profile leaves the nearby list.
-- Optional 60-character BIO in the account profile and nearby cards.
+  24-hour history populated after a five-minute separation buffer.
+- Optional 36-character BIO in the account profile and nearby cards.
 - User reports, blocks, unblock management, and allow-listed moderation bot.
 - EU HTTPS relay and encrypted WireGuard origin path.
 - Public route denial for internal API and Swagger paths.

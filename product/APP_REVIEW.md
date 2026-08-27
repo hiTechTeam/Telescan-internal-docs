@@ -1,6 +1,6 @@
 # App Review Runbook
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: August 27, 2026.**
 
 ## Review setup
 
@@ -24,9 +24,10 @@ unused codes after review.
 
 1. Install and open Telescan on an iPhone running iOS 17.6 or later.
 2. Tap **Continue** on the welcome screen.
-3. Enter one unused eight-character review code and tap **Next**.
-4. Tap **Go**, allow Bluetooth access, and enable scanning.
-5. For the normal user flow, tap **Telescan_bot** on the code screen, press
+3. Authenticate the primary Telescan account with **Sign in with Apple**.
+4. Enter one unused eight-character review code and tap **Link**. Scanning is
+   enabled automatically after registration; allow Bluetooth access when asked.
+5. For the normal Telegram-linking flow, tap **Telescan_bot** on the code screen, press
    **Start** in Telegram, then return to Telescan and enter the code sent by the
    bot.
 6. BLE discovery requires two physical devices. Use Review A and Review B on
@@ -35,17 +36,17 @@ unused codes after review.
 ## App Review Notes template
 
 ```text
-Telescan is designed specifically for Telegram users. A verified Telegram
-identity and a public Telegram username are core product data: Telescan helps
-nearby users exchange those Telegram profiles over Bluetooth. Telegram is not
-offered as an optional social-login shortcut.
+Telescan uses Sign in with Apple for primary account authentication. A verified
+Telegram identity and a public Telegram username are then linked as the profile
+that nearby users can open. Telegram is not used as the primary sign-in method.
 
 Normal sign-in flow:
 1. Open Telescan and tap Continue.
-2. On the code screen, tap Telescan_bot.
-3. In Telegram, press Start to receive a short-lived, single-use linking code.
-4. Return to Telescan, enter the code, and tap Next.
-5. Tap Go and allow Bluetooth access to enable nearby discovery.
+2. Complete Sign in with Apple.
+3. On the Telegram screen, tap Telescan_bot.
+4. In Telegram, press Start to receive a short-lived, single-use linking code.
+5. Return to Telescan, enter the code, and tap Link.
+6. Allow Bluetooth access when asked; nearby discovery starts automatically.
 
 For App Review, use any one of the single-use codes below. Each code links only
 to a dedicated review profile containing no real user data. A code becomes
