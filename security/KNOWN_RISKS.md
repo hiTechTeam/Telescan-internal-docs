@@ -1,6 +1,6 @@
 # Known Technical Risks
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## BLE and client behavior
 
@@ -16,6 +16,9 @@
   in the app container for up to 24 hours. It contains no GPS or distance
   history and is cleared on sign-out, deletion, blocking, or manual removal,
   but a compromised unlocked device may expose those snapshots.
+- The local **Saved** list retains user-selected public profile snapshots until
+  removal, sign-out, or account deletion. It is not uploaded or synchronized,
+  but a compromised unlocked device may expose those snapshots.
 
 ## API and data
 
@@ -23,8 +26,10 @@
   the API does not independently prove physical proximity.
 - Rate limiting uses shared MongoDB fixed-window counters. Limits and indexes
   still require recalibration as traffic patterns change.
-- FastAPI 0.141.1 warns that `ORJSONResponse` is deprecated. Responses and tests
-  currently work; migrate before the compatibility class is removed.
+- Account deletion and Apple-to-Telegram account adoption span several MongoDB
+  collections and, for deletion, object storage. Sessions are revoked first and
+  photo replacement uses compensation, but a process or storage failure can
+  still require an idempotent deletion retry or operational cleanup.
 - Legacy `/v1` behavior remains behind a feature flag for migration. Enabling it
   restores weaker compatibility behavior.
 

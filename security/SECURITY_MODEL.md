@@ -1,6 +1,6 @@
 # Security Model
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## Trust boundaries
 
@@ -38,9 +38,9 @@
   validation and retention.
 - Dedicated cross-host metrics and log collection with provisioned alerts and
   restricted Telegram delivery.
-- App-only UserDefaults declaration in the iOS privacy manifest, a bounded
-  24-hour device-local encounter history, and no advertising or third-party
-  analytics SDK.
+- App-only UserDefaults declaration in the iOS privacy manifest, a 24-hour
+  device-local encounter history, a device-only Saved list, local-state cleanup
+  on sign-out/deletion, and no advertising or third-party analytics SDK.
 
 ## BLE threat model
 

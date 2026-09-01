@@ -1,6 +1,6 @@
 # Moderation Workflow
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## Current model
 
@@ -9,10 +9,11 @@ profile sheet. Report and block behavior is enforced by the API; the iOS menu is
 not the source of truth.
 
 Reports contain a random report ID, reporter and target internal references,
-public Telescan IDs, reason, optional comment, captured target name, username,
-BIO and photo context,
-status, timestamps, moderator actor, and optional moderator note. The reported
-user is not shown the reporter's identity.
+public Telescan IDs, optional comment, captured target name, username, BIO and
+photo context, status, timestamps, moderator actor, and optional moderator note.
+The user-facing contract submits one universal report without a selectable
+category; stored records retain an internal universal `other` value for schema
+compatibility. The reported user is not shown the reporter's identity.
 
 Blocks are unique per blocker/target pair. A block hides profile lookup in both
 directions and is reflected in the iOS cache after the API confirms success.
@@ -20,7 +21,7 @@ directions and is reflected in the iOS cache after the API confirms success.
 ## Admin bot workflow
 
 1. An allow-listed moderator opens pending reports or receives a notification.
-2. The moderator reviews the reason, comment, timestamps, and captured profile.
+2. The moderator reviews the optional comment, timestamps, and captured profile.
 3. The moderator moves the report to `reviewing` when investigation begins.
 4. The moderator optionally adds a concise factual note.
 5. The moderator explicitly confirms `resolved` or `dismissed`.

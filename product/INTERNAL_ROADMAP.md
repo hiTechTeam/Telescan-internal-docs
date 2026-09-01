@@ -1,6 +1,6 @@
 # Internal Roadmap
 
-**Last reviewed: August 27, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## Completed production foundations
 
@@ -14,6 +14,9 @@
   persistent pre-history buffer recovered before scanning after app termination.
 - Optional 36-character BIO in the account profile and nearby cards.
 - User reports, blocks, unblock management, and allow-listed moderation bot.
+- Universal user reports with legacy stored-record compatibility.
+- Device-local Saved profiles, configurable quick actions, new-Met state, and
+  application/profile badge aggregation.
 - EU HTTPS relay and encrypted WireGuard origin path.
 - Public route denial for internal API and Swagger paths.
 - Hardened application containers and production SSH hosts.
@@ -23,7 +26,8 @@
 - Dedicated metrics, logs, dashboards, cross-host telemetry, and Telegram
   alerts.
 - Successful isolated restore of a real encrypted production MongoDB snapshot.
-- Ruff, Pyright, pytest, Docker, and iOS CI coverage appropriate to each repo.
+- Ruff, Pyright, pytest, Docker, and iOS unit/build CI across implementation
+  repositories; gesture and cross-version UI coverage remains a launch task.
 
 ## Before broad public launch
 
@@ -40,12 +44,13 @@
 | Area | Work | State |
 | --- | --- | --- |
 | Migration | Disable legacy API after supported-client adoption and remove legacy code hashes | Rollout required |
-| API quality | Replace deprecated `ORJSONResponse`; expand MongoDB/S3 integration and contract tests | Planned |
+| API quality | Expand MongoDB/S3 integration tests and add durable retry for multi-resource account deletion | Planned |
 | Supply chain | Enable monitoring dependency alerts and pin Python image/build inputs to reviewed immutable revisions | Planned |
 | BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |
 | Notifications | Add APNs only after Apple account availability and a clear aggregation/privacy design | Deferred |
 | Moderation | Add case search, roles, and appeals only when usage requires them | Later |
 | Repository controls | Upgrade plan or add independent enforcement for private-repo PR/CI/secret gates | Planned |
+| iOS quality | Add an iOS 18/26 device matrix and XCUITest coverage for swipe, hold, navigation-bar, and context-menu behavior | Planned |
 | Android | Implement only after the BLE contract is versioned and stable | Later |
 
 ## Explicit non-goals for the current MVP

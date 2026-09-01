@@ -1,6 +1,6 @@
 # Telescan System Architecture
 
-**Last reviewed: August 27, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## Product boundary
 
@@ -17,8 +17,8 @@ to the backend.
 
 - **iOS client:** advertises and scans a compact stable Telescan identifier,
   resolves complete profiles through the authenticated API, caches the current
-  account and block list, and owns nearby-distance presentation and the local
-  24-hour **Met** encounter history.
+  account and block list, and owns nearby-distance presentation, the local
+  24-hour **Met** encounter history, and the device-only **Saved** list.
 - **User bot:** reads the user's current public Telegram profile, asks the API to
   issue a one-time link code, and delivers server-side confirmation messages.
 - **Admin bot:** exposes report queues to an explicit Telegram ID allow-list and
@@ -122,10 +122,12 @@ account deletion clear the local history.
 
 ## Reports and blocks
 
-`POST /api/v1/reports` accepts an idempotency UUID, target Telescan ID, reason,
-and optional context. The API captures the target name, username, BIO, and photo
-snapshot and stores the
-moderation lifecycle independently of the live profile.
+`POST /api/v1/reports` accepts an idempotency UUID, target Telescan ID, and
+optional context. The public contract exposes one universal report and does
+not ask the user to select a reason. The API keeps the internal universal
+`other` kind for stored-record and moderator compatibility, captures the target
+name, username, BIO, and photo snapshot, and stores the moderation lifecycle
+independently of the live profile.
 
 Blocking is enforced server-side in both profile-lookup directions. iOS removes
 the target after the API confirms the block and caches block IDs so a blocked
@@ -162,6 +164,9 @@ removed. Resolved or dismissed reports expire through a 180-day TTL.
 
 The device-local encounter history is outside the API data model and is cleared
 by the iOS client during sign-out and account deletion.
+The Saved list is also outside the API data model, never synchronizes between
+devices, and is cleared from both persistence and in-memory state with the local
+account session.
 
 ## Public network boundary
 
@@ -171,7 +176,10 @@ reachable only through the API loopback port and an administrative SSH tunnel.
 
 The API and MongoDB ports are published only on the Moscow loopback interface.
 The WireGuard origin listener is restricted to the EU peer and must never bind
-to a public interface.
+to a public interface. Moscow nginx separately terminates public TLS for the
+main `tgtelescan.ru` legal site and documented direct-origin recovery access;
+normal `api.tgtelescan.ru` client traffic resolves to the EU relay. Host firewall
+rules and DNS must preserve that distinction.
 
 Prometheus and Loki ingest only through the dedicated `wg-monitor` network.
 Grafana is available through an administrator SSH tunnel. Telegram alert

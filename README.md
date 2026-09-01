@@ -25,7 +25,7 @@ in GitHub environments or on the production hosts.
 
 | Repository | Responsibility |
 | --- | --- |
-| `Telescan-iOS` | SwiftUI client, device sessions, BLE discovery, device-local encounter history, reports and blocks UI |
+| `Telescan-iOS` | SwiftUI client, device sessions, BLE discovery, device-local Met and Saved lists, quick actions, reports and blocks UI |
 | `Telescan-bot-app` | Telegram presentation, profile synchronization, link-code requests, confirmation messages |
 | `Telescan-admin-bot` | Allow-listed Telegram moderation interface |
 | `Telescan-api` | Authentication, authorization, profiles, photos, reports, blocks, and data ownership |

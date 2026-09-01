@@ -1,6 +1,6 @@
 # Production Operations
 
-**Last reviewed: August 24, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## Topology
 
@@ -24,6 +24,10 @@ iOS / user VPN -> api.tgtelescan.ru:443 -> EU nginx
 
 The relay terminates TLS and is therefore both a trust-boundary component and
 an availability dependency. The EU-to-Moscow hop is encrypted by WireGuard.
+Moscow nginx also serves the public main-domain legal pages and retains the
+documented direct-origin recovery path. Normal app traffic must still resolve
+`api.tgtelescan.ru` to the EU relay; verify DNS and the Moscow host firewall as
+part of every edge change.
 
 ## Administrative tunnels
 

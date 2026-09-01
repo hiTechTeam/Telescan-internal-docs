@@ -1,6 +1,6 @@
 # App Review Runbook
 
-**Last reviewed: August 27, 2026.**
+**Last reviewed: September 1, 2026.**
 
 ## Review setup
 
@@ -19,6 +19,12 @@ Issue a separate batch of ten single-use codes for each review profile, valid
 for 30 days. Consume one code from each batch during the final clean-install
 test and provide the remaining codes privately in App Store Connect. Revoke all
 unused codes after review.
+
+A review profile can be attached to only one Apple identity at a time. Multiple
+codes from the same batch support retries or reinstalls using the same Apple
+subject; they do not attach the same Telegram profile to unrelated Apple
+identities. Use Review A and Review B for independent identities and two-device
+BLE testing.
 
 ## Reviewer path
 
