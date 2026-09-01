@@ -14,16 +14,23 @@
 - MongoDB root credentials are operational credentials; the API uses a dedicated
   `readWrite` application account only.
 
-## Implemented controls
+## P0 release-candidate controls
 
-- Random short-lived, one-time link codes stored as keyed digests.
+The following controls are implemented in the local release candidate. Runtime
+claims still require the production acceptance evidence in `P0_CONTRACTS.md`.
+
+- Random short-lived, one-time link codes stored as keyed digests, with one
+  active normal code per Telegram target and bounded consumed-proof retention.
 - Short-lived access JWTs, rotating refresh tokens, and active session checks on
   every protected request.
 - Constant-time verification for bot and moderation service credentials.
 - Idempotency keys and shared MongoDB-backed rate limits on abuse-sensitive
-  flows.
-- Server-side bidirectional block enforcement and report snapshots for audit.
-- Production startup rejection of development secrets and wildcard/empty CORS.
+  flows; durable, resumable journals for account merge and deletion.
+- Server-side bidirectional block enforcement, immutable moderation events,
+  revision compare-and-swap, and separately retained report evidence.
+- Production startup rejection of development/placeholder/duplicated secrets,
+  unsafe origins, wildcard CORS, and legacy authentication. An empty CORS
+  allow-list is valid and is the safest configuration for native-only clients.
 - Public `404` policy for internal services and Swagger/OpenAPI paths at both
   nginx edges.
 - TLS 1.2/1.3, HSTS, restrictive browser headers, hidden nginx versions, and an
@@ -34,13 +41,15 @@
   environments, tests, and caches from application image contexts.
 - Mode-`600` runtime secret files and separate GitHub production environments.
 - Root/password/keyboard-interactive SSH and X11 disabled; Fail2ban enabled.
-- Client-side encrypted, off-host MongoDB backups with automated restore
-  validation and retention.
-- Dedicated cross-host metrics and log collection with provisioned alerts and
-  restricted Telegram delivery.
+- Client-side encrypted, off-host, point-in-time-consistent MongoDB backups with
+  current-schema, domain-reference, index, and application-role restore checks.
+- Dedicated cross-host metrics and log collection with restricted write-only
+  ingestion, missing/stale-signal and capacity alerts, and restricted Telegram
+  delivery.
 - App-only UserDefaults declaration in the iOS privacy manifest, a 24-hour
-  device-local encounter history, a device-only Saved list, local-state cleanup
-  on sign-out/deletion, and no advertising or third-party analytics SDK.
+  device-local encounter history, a device-only Saved list, generation-bound
+  asynchronous work, complete account-state cleanup on every invalid/changed
+  session boundary, and no advertising or third-party analytics SDK.
 
 ## BLE threat model
 

@@ -2,10 +2,16 @@
 
 **Last reviewed: September 1, 2026.**
 
-## Completed production foundations
+## Implemented P0 release-candidate foundations
+
+These items are implemented and locally verifiable in the P0 candidate; they
+are not all deployed or accepted in production.
 
 - Authenticated device sessions with rotating refresh tokens.
-- Current-device logout and account deletion with cache cleanup.
+- Current-device logout and durable idempotent account deletion, with complete
+  account-scoped client cleanup and obsolete-callback rejection.
+- Durable Apple-to-Telegram account adoption with canonical-profile preservation,
+  resumable migration, bounded proof retention, and retryable photo cleanup.
 - BLE discovery using a payload-safe Telescan identifier and complete-profile
   validation before presentation.
 - Nearby expiry UX in list and expanded profile views.
@@ -13,7 +19,9 @@
   24-hour history populated after a one-minute BLE heartbeat timeout, with a
   persistent pre-history buffer recovered before scanning after app termination.
 - Optional 36-character BIO in the account profile and nearby cards.
-- User reports, blocks, unblock management, and allow-listed moderation bot.
+- Idempotent user reports with separately retained evidence, 180-day closed-case
+  cleanup, revision-safe moderation events, blocks, unblock management, and an
+  allow-listed moderation bot.
 - Universal user reports with legacy stored-record compatibility.
 - Device-local Saved profiles, configurable quick actions, new-Met state, and
   application/profile badge aggregation.
@@ -21,11 +29,15 @@
 - Public route denial for internal API and Swagger paths.
 - Hardened application containers and production SSH hosts.
 - Least-privilege MongoDB application user.
-- Automated TLS renewal and encrypted, restore-validated database backups.
+- Automated TLS renewal and consistent encrypted off-host database backup plus
+  current-schema isolated-restore validation tooling.
 - Shared MongoDB-backed rate limiting for abuse-sensitive API flows.
-- Dedicated metrics, logs, dashboards, cross-host telemetry, and Telegram
-  alerts.
-- Successful isolated restore of a real encrypted production MongoDB snapshot.
+- Dedicated metrics, logs, dashboards, restricted ingestion, cross-host
+  freshness/capacity alerts, and Telegram delivery-drill tooling.
+- Main-only, host-serialized, preflighted deployment with application and edge
+  rollback paths.
+- A canonical localized legal source, generated public documents, exact API
+  vendoring, and deployment digest checks at both public origins.
 - Ruff, Pyright, pytest, Docker, and iOS unit/build CI across implementation
   repositories; gesture and cross-version UI coverage remains a launch task.
 
@@ -35,6 +47,13 @@
   TestFlight/App Store review assets and privacy declarations.
 - Schedule recurring restore drills and run a complete service recovery
   exercise.
+- Run a current-schema encrypted production-snapshot restore in isolation and
+  record observed backup age and restore time.
+- Freeze the coordinated P0 commits/images, deploy them in the documented order,
+  run production read-only attestation, and exercise every rollback path.
+- Complete restricted-ingest and Grafana-key migrations, require fresh host
+  state, and observe both firing/resolved Telegram drill messages.
+- Confirm the canonical legal version/digest and TLS on both public origins.
 - Complete release-candidate regression, accessibility, and TestFlight testing.
 - Calibrate monitoring thresholds under normal production traffic.
 - Define moderation response ownership, escalation, and retention review.
@@ -43,8 +62,8 @@
 
 | Area | Work | State |
 | --- | --- | --- |
-| Migration | Disable legacy API after supported-client adoption and remove legacy code hashes | Rollout required |
-| API quality | Expand MongoDB/S3 integration tests and add durable retry for multi-resource account deletion | Planned |
+| Migration | Run the production legacy-removal and journal/moderation migrations; legacy auth is prohibited in production | Rollout required |
+| API quality | Expand real MongoDB/S3 integration and chaos coverage beyond the implemented deterministic saga/failure suites | Planned |
 | Supply chain | Enable monitoring dependency alerts and pin Python image/build inputs to reviewed immutable revisions | Planned |
 | BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |
 | Notifications | Add APNs only after Apple account availability and a clear aggregation/privacy design | Deferred |

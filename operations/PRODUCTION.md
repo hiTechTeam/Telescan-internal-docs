@@ -2,6 +2,11 @@
 
 **Last reviewed: September 1, 2026.**
 
+This runbook covers the P0 release candidate. Source-controlled controls are
+not claims about current host state. The candidate must not be called accepted
+until the production attestation, restore, rollback, telemetry, alert-delivery,
+and legal-origin checks are dated and attached to the release.
+
 ## Topology
 
 | Role | Address | Notes |
@@ -72,6 +77,26 @@ lifecycle and recovery.
 - `Telescan-monitoring` deploys the central observability stack after CI and
   verifies service readiness, production telemetry, and Telegram egress.
 
+All production workflows reject non-`main` revisions before mutation. Services
+sharing a host acquire `/tmp/telescan-production-deploy.lock` with a bounded
+wait, in addition to repository-level GitHub concurrency, so separate
+repositories cannot mutate that host concurrently. Preflight resolves the
+expected target and validates required files and configuration. Deployment
+then activates a fully uploaded immutable release through an atomic `current`
+pointer and records an fsynced transaction intent, old/new image identities,
+and recovery controller before changing runtime state. Boot and online recovery
+watchers finish or roll back an interrupted transaction; injected child and
+outer-session termination tests cover the boundaries. A failed mutation or
+private health gate restores and verifies the prior release and image.
+
+API rollout additionally closes the owner-scoped nginx maintenance gate before
+migrations and keeps it closed through local health, invariant, legal, and
+singleton-topology checks. The candidate is committed durably before ingress is
+opened; a subsequent public-origin failure closes ingress again and requires
+operator recovery instead of starting an older API that may not understand the
+new journals. Database migrations must remain backward compatible because
+application image rollback never rolls back data.
+
 Deployment credentials belong to GitHub production environments. Runtime
 secrets stay in mode-`600` host `.env` files. Never copy them into images,
 documentation, Actions logs, or repository secrets shared with unrelated jobs.
@@ -93,24 +118,32 @@ digest. Upgrade only through a reviewed repository change.
 
 ## Database backup and recovery
 
-`telescan-mongodb-backup.timer` runs daily and:
+The production rollout must enable and verify
+`telescan-mongodb-backup.timer`. Each daily run:
 
-1. creates a compressed application-database archive;
-2. validates it with `mongorestore --dryRun`;
-3. uploads it to a client-side encrypted off-host Restic repository;
-4. downloads and validates the latest snapshot;
-5. retains 7 daily, 5 weekly, and 12 monthly snapshots.
+1. validates database, application-role, storage, and Restic configuration;
+2. acquires the backup lock and creates a compressed application-database
+   archive under `fsyncLock` or another documented quiesced boundary;
+3. validates it with `mongorestore --dryRun`;
+4. uploads it to a client-side encrypted off-host Restic repository;
+5. downloads and validates the latest snapshot;
+6. retains 7 daily, 5 weekly, and 12 monthly snapshots.
 
-Daily snapshots are restore-validated before retention is applied. A full
+Daily archives receive a structural dry run before retention is applied. A full
 isolated restore of a real encrypted production snapshot passed on August 18,
-2026, including checksums, indexes, collection validation, and reads through a
-temporary least-privilege application account. Detailed evidence is in
-`Telescan-db/ops/restore-drills/2026-08-18.md`.
+2026 for the pre-P0 schema. That evidence is historical and does not accept the
+current candidate. The new drill restores to an isolated Docker network and
+must validate current journal/evidence/moderation indexes, domain references,
+no active merge pointing to a missing source/target, the temporary application's
+read/write ability in its own database, and denial of admin or foreign-database
+authority. It records snapshot identity, elapsed restore time, and observed
+backup age without recording credentials or user data.
 
 The drill proves database restoration, not a complete service RTO. Daily
 backups currently imply up to roughly 24 hours of database RPO exposure; host
-rebuild, service startup, storage reconciliation, and traffic cutover remain
-part of a future full recovery exercise.
+rebuild, service startup, object-storage reconciliation, and traffic cutover
+must be measured separately. A current-schema production-snapshot drill remains
+mandatory before P0 acceptance.
 
 Never test recovery by dropping the production database. Restore the selected
 snapshot into an isolated database first, validate documents and indexes, then
@@ -137,6 +170,8 @@ policies, and health checks appropriate to each service.
 6. Validate public legal pages and confirm documentation/internal routes return
    `404` publicly.
 7. Validate certificate timers and the most recent database snapshot.
+8. Verify the canonical legal version/digest at both `api.tgtelescan.ru` and
+   `tgtelescan.ru`, including TLS and same-origin route behavior.
 
 Do not regenerate WireGuard keys, rotate service secrets, replace DNS, or restore
 the database during an ordinary application deployment.
@@ -145,10 +180,29 @@ the database during an ordinary application deployment.
 
 The dedicated monitoring host runs Grafana, Prometheus, Loki, and Alloy.
 Production agents send host, container, timer, backup, and WireGuard telemetry
-through `wg-monitor`; application logs are centralized in Loki. Provisioned
-alerts cover endpoint failures, missing telemetry, unhealthy containers, backup
-freshness, timers, WireGuard handshakes, and host capacity. Telegram delivery
-uses a restricted EU egress proxy.
+through `wg-monitor`; application logs are centralized in Loki. The restricted
+ingest profile exposes write-only Prometheus/Loki paths to the monitoring
+network and denies read/query/admin paths. Migrate every agent to that endpoint,
+verify ingestion, then bind legacy direct ingest to loopback; do not reverse the
+order.
 
-Remaining operational work is to calibrate alert noise under real traffic and
-schedule recurring full recovery exercises.
+Provisioned rules cover endpoint/container failure, missing or stale host state,
+backup age, required timers, WireGuard handshakes, the monitoring data mount,
+disk and inode pressure, and Loki absence/growth. Deployment must require fresh
+state metrics rather than leave the compatibility switch disabled. The
+monitoring data filesystem must be mounted before startup.
+
+Grafana secret-key replacement is a guarded data migration, not a normal
+environment-variable rotation. Rehearse against a copy, back up the database,
+run the repository preparation/check procedure, and prove existing encrypted
+data can still be read before enabling the new key. Telegram acceptance requires
+a bounded interactive drill that observes both firing and resolved messages and
+cleans up its synthetic alert.
+
+Before handoff, run the read-only attestation collector on each role. It must
+fail closed when mandatory DNS/TLS, listener, firewall, WireGuard, SSH effective
+policy, filesystem, timer, port, or image-digest evidence is unavailable. Review
+and sanitize the output before adding it to the private audit channel.
+
+After those gates, remaining operational work is alert-noise calibration and
+recurring full-service recovery exercises.

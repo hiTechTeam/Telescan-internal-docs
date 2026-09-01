@@ -10,8 +10,9 @@
   protocol does not provide cryptographic proof of identity or proximity.
 - RSSI-based distance is approximate and affected by hardware, body position,
   reflections, interference, and iOS scheduling.
-- Production behavior has been verified on the current physical test devices,
-  but broader model/OS coverage and long-running power tests remain required.
+- Earlier behavior was exercised on physical devices, but this P0 candidate
+  still requires a signed TestFlight two-device BLE/background matrix. Simulator
+  tests do not establish real radio or background behavior.
 - The local **Met** history retains public profile snapshots and last-seen times
   in the app container for up to 24 hours. It contains no GPS or distance
   history and is cleared on sign-out, deletion, blocking, or manual removal,
@@ -26,12 +27,14 @@
   the API does not independently prove physical proximity.
 - Rate limiting uses shared MongoDB fixed-window counters. Limits and indexes
   still require recalibration as traffic patterns change.
-- Account deletion and Apple-to-Telegram account adoption span several MongoDB
-  collections and, for deletion, object storage. Sessions are revoked first and
-  photo replacement uses compensation, but a process or storage failure can
-  still require an idempotent deletion retry or operational cleanup.
-- Legacy `/v1` behavior remains behind a feature flag for migration. Enabling it
-  restores weaker compatibility behavior.
+- Account deletion and Apple-to-Telegram adoption remain distributed operations
+  across MongoDB and object storage. The P0 candidate adds durable idempotent
+  journals, recovery proof, retryable cleanup, and invariant auditing, but its
+  migration and interruption behavior still needs production-like staging
+  evidence before rollout.
+- Legacy `/v1` behavior remains available only for non-production migration
+  testing. Production configuration rejects it; accepting a bypass would reopen
+  the former Apple-first authorization risk.
 
 ## Sessions and notifications
 
@@ -45,8 +48,10 @@
 - Moderation uses an allow-listed Telegram bot, not a case-management console.
 - There is no case assignment, formal response SLA, analytics dashboard, or
   multi-role permission model.
-- Reports depend on captured profile context; retention and moderator access must
-  be reviewed as the user base grows.
+- Report text, captured context, separately stored photo evidence, and immutable
+  moderation events increase the data exposed to moderators. The 180-day closed
+  retention and 30-day completed-operation retention must be re-evaluated as
+  law, incident needs, and case volume change.
 
 ## Infrastructure and operations
 
@@ -55,8 +60,16 @@
 - A relay, WireGuard, or Moscow-origin failure interrupts normal API traffic.
 - Metrics, logs, cross-host health monitoring, and Telegram alert delivery are
   centralized. Alert thresholds still need production burn-in and tuning.
-- One isolated production MongoDB restore drill passed on August 18, 2026, but
-  recurring full-service recovery exercises are not yet scheduled.
+- One isolated production MongoDB restore drill passed on August 18, 2026, for
+  the prior schema. A new current-schema drill with journal/evidence indexes,
+  application-role boundaries, measured RPO/RTO, and recurring scheduling is a
+  P0 operational acceptance gate.
+- Restricted monitoring ingestion, mandatory freshness enforcement, Grafana
+  secret-key migration, and Telegram firing/resolved delivery must be staged
+  and evidenced on the real hosts; source validation cannot prove rollout.
+- Source-controlled deployment gates do not prove current DNS, TLS, firewall,
+  WireGuard, SSH, listener, container-image, or timer state. A dated read-only
+  production attestation remains required.
 - Private-repository merge and secret protections are procedural on the current
   GitHub plan.
 - Shared long-lived service credentials require a documented recurring rotation
