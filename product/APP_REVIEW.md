@@ -1,6 +1,6 @@
 # App Review Runbook
 
-**Last reviewed: September 1, 2026.**
+**Last reviewed: September 2, 2026.**
 
 ## Review setup
 
@@ -59,12 +59,19 @@ to a dedicated review profile containing no real user data. A code becomes
 invalid immediately after one successful use. If the app is reinstalled or
 tested on another device, use the next unused code.
 
+Codes expire at REVIEW_CODE_EXPIRY_UTC.
+
 Primary profile — Telescan Review A (@REVIEW_A_USERNAME):
 REVIEW_A_CODE_1
 REVIEW_A_CODE_2
 REVIEW_A_CODE_3
 REVIEW_A_CODE_4
 REVIEW_A_CODE_5
+REVIEW_A_CODE_6
+REVIEW_A_CODE_7
+REVIEW_A_CODE_8
+REVIEW_A_CODE_9
+REVIEW_A_CODE_10
 
 Optional second profile for two-device BLE testing — Telescan Review B
 (@REVIEW_B_USERNAME):
@@ -73,6 +80,11 @@ REVIEW_B_CODE_2
 REVIEW_B_CODE_3
 REVIEW_B_CODE_4
 REVIEW_B_CODE_5
+REVIEW_B_CODE_6
+REVIEW_B_CODE_7
+REVIEW_B_CODE_8
+REVIEW_B_CODE_9
+REVIEW_B_CODE_10
 
 Bluetooth discovery requires two physical devices. Demonstration video:
 https://github.com/user-attachments/assets/a3910e7c-c475-40b3-a3c3-43ab5ea79c30
