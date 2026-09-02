@@ -16,7 +16,7 @@ Never commit Telegram IDs, Telescan IDs, clear review codes, phone numbers, or
 App Store Connect contact details.
 
 Issue a separate batch of ten single-use codes for each review profile, valid
-for 30 days. Consume one code from each batch during the final clean-install
+for 90 days. Consume one code from each batch during the final clean-install
 test and provide the remaining codes privately in App Store Connect. Revoke all
 unused codes after review.
 
