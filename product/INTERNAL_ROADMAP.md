@@ -1,11 +1,12 @@
 # Internal Roadmap
 
-**Last reviewed: September 1, 2026.**
+**Last reviewed: September 2, 2026.**
 
-## Implemented P0 release-candidate foundations
+## Implemented and deployed MVP foundations
 
-These items are implemented and locally verifiable in the P0 candidate; they
-are not all deployed or accepted in production.
+These items are implemented on `main`; the server components completed their
+current production workflows. Formal acceptance still requires the operational
+and signed-device evidence listed below.
 
 - Authenticated device sessions with rotating refresh tokens.
 - Current-device logout and durable idempotent account deletion, with complete
@@ -49,11 +50,10 @@ are not all deployed or accepted in production.
   exercise.
 - Run a current-schema encrypted production-snapshot restore in isolation and
   record observed backup age and restore time.
-- Freeze the coordinated P0 commits/images, deploy them in the documented order,
-  run production read-only attestation, and exercise every rollback path.
+- Capture the full production read-only attestation and exercise a dated
+  non-production or controlled rollback against the frozen release.
 - Complete restricted-ingest and Grafana-key migrations, require fresh host
   state, and observe both firing/resolved Telegram drill messages.
-- Confirm the canonical legal version/digest and TLS on both public origins.
 - Complete release-candidate regression, accessibility, and TestFlight testing.
 - Calibrate monitoring thresholds under normal production traffic.
 - Define moderation response ownership, escalation, and retention review.
@@ -62,7 +62,7 @@ are not all deployed or accepted in production.
 
 | Area | Work | State |
 | --- | --- | --- |
-| Migration | Run the production legacy-removal and journal/moderation migrations; legacy auth is prohibited in production | Rollout required |
+| Migration | Production workflows applied the current migrations and prohibit legacy auth; retain a sanitized invariant attestation with the release evidence | Deployed; evidence retention pending |
 | API quality | Expand real MongoDB/S3 integration and chaos coverage beyond the implemented deterministic saga/failure suites | Planned |
 | Supply chain | Enable monitoring dependency alerts and pin Python image/build inputs to reviewed immutable revisions | Planned |
 | BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |

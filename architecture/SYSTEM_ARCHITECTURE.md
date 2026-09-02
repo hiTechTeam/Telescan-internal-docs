@@ -1,10 +1,12 @@
 # Telescan System Architecture
 
-**Last reviewed: September 1, 2026.**
+**Last reviewed: September 2, 2026.**
 
-This document describes the P0 release candidate. Production conformance is
-not implied until the dated deployment, restore, telemetry, and device evidence
-listed in [P0 contracts](../product/P0_CONTRACTS.md) has been collected.
+This document describes the source currently deployed by the production
+workflows. Basic public and host-level health was reconfirmed on September 2,
+2026. Full production conformance still depends on the restore, telemetry,
+attestation, rollback, and signed-device evidence listed in
+[P0 contracts](../product/P0_CONTRACTS.md).
 
 ## Product boundary
 

@@ -1,11 +1,14 @@
 # Production Operations
 
-**Last reviewed: September 1, 2026.**
+**Last reviewed: September 2, 2026.**
 
-This runbook covers the P0 release candidate. Source-controlled controls are
-not claims about current host state. The candidate must not be called accepted
-until the production attestation, restore, rollback, telemetry, alert-delivery,
-and legal-origin checks are dated and attached to the release.
+This runbook covers the source currently deployed by the production workflows.
+On September 2, 2026, the public API health endpoints, both legal origins,
+Moscow services and backup timer, EU relay and WireGuard path, and the central
+monitoring containers were checked successfully. These smoke checks do not
+replace the full production attestation, current-schema restore, rollback,
+restricted-ingest, alert-delivery, and signed-device evidence still required
+for formal P0 acceptance.
 
 ## Topology
 

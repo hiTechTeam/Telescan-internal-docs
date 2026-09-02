@@ -1,6 +1,6 @@
 # Known Technical Risks
 
-**Last reviewed: September 1, 2026.**
+**Last reviewed: September 2, 2026.**
 
 ## BLE and client behavior
 
@@ -10,8 +10,9 @@
   protocol does not provide cryptographic proof of identity or proximity.
 - RSSI-based distance is approximate and affected by hardware, body position,
   reflections, interference, and iOS scheduling.
-- Earlier behavior was exercised on physical devices, but this P0 candidate
-  still requires a signed TestFlight two-device BLE/background matrix. Simulator
+- Earlier behavior was exercised repeatedly on physical devices, but the
+  publishing-team build still requires a signed TestFlight two-device
+  BLE/background matrix. Simulator
   tests do not establish real radio or background behavior.
 - The local **Met** history retains public profile snapshots and last-seen times
   in the app container for up to 24 hours. It contains no GPS or distance
@@ -28,10 +29,10 @@
 - Rate limiting uses shared MongoDB fixed-window counters. Limits and indexes
   still require recalibration as traffic patterns change.
 - Account deletion and Apple-to-Telegram adoption remain distributed operations
-  across MongoDB and object storage. The P0 candidate adds durable idempotent
-  journals, recovery proof, retryable cleanup, and invariant auditing, but its
-  migration and interruption behavior still needs production-like staging
-  evidence before rollout.
+  across MongoDB and object storage. The deployed release adds durable
+  idempotent journals, recovery proof, retryable cleanup, and invariant
+  auditing, but interruption and recovery behavior still needs recurring
+  production-like staging evidence.
 - Legacy `/v1` behavior remains available only for non-production migration
   testing. Production configuration rejects it; accepting a bypass would reopen
   the former Apple-first authorization risk.
@@ -67,9 +68,11 @@
 - Restricted monitoring ingestion, mandatory freshness enforcement, Grafana
   secret-key migration, and Telegram firing/resolved delivery must be staged
   and evidenced on the real hosts; source validation cannot prove rollout.
-- Source-controlled deployment gates do not prove current DNS, TLS, firewall,
-  WireGuard, SSH, listener, container-image, or timer state. A dated read-only
-  production attestation remains required.
+- A September 2 smoke check confirmed public DNS/TLS, the API and legal routes,
+  the Moscow/EU service path, backup and certificate timers, and central
+  monitoring health. This does not prove the complete firewall, SSH, listener,
+  image-digest, mount, or telemetry inventory; the full read-only production
+  attestation remains required.
 - Private-repository merge and secret protections are procedural on the current
   GitHub plan.
 - Shared long-lived service credentials require a documented recurring rotation

@@ -1,15 +1,16 @@
 # Telescan Internal Documentation
 
-**Private repository. Last reviewed: September 1, 2026.**
+**Private repository. Last reviewed: September 2, 2026.**
 
 This repository contains the non-public technical and operational documentation
 for Telescan. It is the cross-repository source of truth for architecture,
 production topology, security boundaries, known risks, moderation, and internal
 planning.
 
-The current documentation includes a local P0 release candidate. Statements
-about candidate controls do not prove deployment; the required operational and
-device evidence is listed in
+The coordinated P0 source is published on `main` and the server components have
+completed their current production workflows. Deployment success does not by
+itself prove every host, recovery, or physical-device property; the remaining
+operational and device evidence is listed in
 [P0 remediation contracts](product/P0_CONTRACTS.md).
 
 Do not place passwords, tokens, private keys, complete `.env` files, database

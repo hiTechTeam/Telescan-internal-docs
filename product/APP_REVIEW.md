@@ -28,6 +28,11 @@ subject; they do not attach the same Telegram profile to unrelated Apple
 identities. Use Review A and Review B for independent identities and two-device
 BLE testing.
 
+The App Store archive must be signed by the publishing company's paid Apple
+Developer team. Replace the local Personal Team identifier before archiving,
+confirm that `hiTeam.TelescaniOS` is registered for that team with Sign in with
+Apple enabled, and use a build number that has not already been uploaded.
+
 ## Reviewer path
 
 1. Install and open Telescan on an iPhone running iOS 17.6 or later.
@@ -58,8 +63,9 @@ Normal sign-in flow:
 
 For App Review, use any one of the single-use codes below. Each code links only
 to a dedicated review profile containing no real user data. A code becomes
-invalid immediately after one successful use. If the app is reinstalled or
-tested on another device, use the next unused code.
+invalid immediately after one successful use. A reinstall using the same Apple
+review identity may use the next unused code for that profile. A different
+Apple identity must use the second review profile.
 
 Codes expire at REVIEW_CODE_EXPIRY_UTC.
 
@@ -73,7 +79,6 @@ REVIEW_A_CODE_6
 REVIEW_A_CODE_7
 REVIEW_A_CODE_8
 REVIEW_A_CODE_9
-REVIEW_A_CODE_10
 
 Optional second profile for two-device BLE testing — Telescan Review B
 (@REVIEW_B_USERNAME):
@@ -86,7 +91,6 @@ REVIEW_B_CODE_6
 REVIEW_B_CODE_7
 REVIEW_B_CODE_8
 REVIEW_B_CODE_9
-REVIEW_B_CODE_10
 
 Bluetooth discovery requires two physical devices. Demonstration video:
 https://github.com/user-attachments/assets/a3910e7c-c475-40b3-a3c3-43ab5ea79c30
@@ -106,3 +110,5 @@ Support contact: admin@tgtelescan.ru
   opening without exposing phone numbers or private chats.
 - App Store privacy answers match the shipped privacy manifest and policy.
 - Review notes contain only currently unused codes and a monitored contact.
+- The archive uses the publishing company team, the production entitlement,
+  and a build number not previously uploaded to App Store Connect.
