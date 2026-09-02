@@ -16,9 +16,11 @@ Never commit Telegram IDs, Telescan IDs, clear review codes, phone numbers, or
 App Store Connect contact details.
 
 Issue a separate batch of ten single-use codes for each review profile, valid
-for 90 days. Consume one code from each batch during the final clean-install
-test and provide the remaining codes privately in App Store Connect. Revoke all
-unused codes after review.
+for 90 days, and provide them privately in App Store Connect. Do not test these
+codes with a personal Apple identity: the first successful link reserves that
+Telegram profile for the Apple identity used during the test. Verify the normal
+linking flow with a separate non-review profile, confirm each review batch by
+its server-side status, and revoke all unused codes after review.
 
 A review profile can be attached to only one Apple identity at a time. Multiple
 codes from the same batch support retries or reinstalls using the same Apple
@@ -98,7 +100,8 @@ Support contact: admin@tgtelescan.ru
 
 - Production API, bot, privacy policy, and terms are reachable.
 - Account deletion succeeds from the in-app profile menu.
-- Review A and Review B can discover each other on two physical devices.
+- The normal two-device BLE flow succeeds with non-review test profiles; the
+  dedicated review profiles remain unlinked until Apple begins review.
 - The submitted video shows permissions, scanning, discovery, and profile
   opening without exposing phone numbers or private chats.
 - App Store privacy answers match the shipped privacy manifest and policy.
