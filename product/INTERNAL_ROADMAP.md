@@ -1,88 +1,27 @@
 # Internal Roadmap
 
-**Last reviewed: September 2, 2026.**
+**Last reviewed: September 5, 2026.**
 
-## Implemented and deployed MVP foundations
+## Implemented
 
-These items are implemented on `main`; the server components completed their
-current production workflows. Formal acceptance still requires the operational
-and signed-device evidence listed below.
+- Device sessions, Telegram linking, account merge/deletion
+- BLE discovery, local Met/Saved lists and quick actions
+- Profiles, BIO/photos, reports, blocks and moderation bot
+- EU relay, private origin, backups and centralized monitoring
+- Main-only transactional deployments with rollback
+- Canonical legal source and cross-repository CI
 
-- Authenticated device sessions with rotating refresh tokens.
-- Current-device logout and durable idempotent account deletion, with complete
-  account-scoped client cleanup and obsolete-callback rejection.
-- Durable Apple-to-Telegram account adoption with canonical-profile preservation,
-  resumable migration, bounded proof retention, and retryable photo cleanup.
-- BLE discovery using a payload-safe Telescan identifier and complete-profile
-  validation before presentation.
-- Nearby expiry UX in list and expanded profile views.
-- Stable discovery-order rows, 10-second distance refresh, and a device-local
-  24-hour history populated after a one-minute BLE heartbeat timeout, with a
-  persistent pre-history buffer recovered before scanning after app termination.
-- Optional 36-character BIO in the account profile and nearby cards.
-- Idempotent user reports with separately retained evidence, 180-day closed-case
-  cleanup, revision-safe moderation events, blocks, unblock management, and an
-  allow-listed moderation bot.
-- Universal user reports with legacy stored-record compatibility.
-- Device-local Saved profiles, configurable quick actions, new-Met state, and
-  application/profile badge aggregation.
-- EU HTTPS relay and encrypted WireGuard origin path.
-- Public route denial for internal API and Swagger paths.
-- Hardened application containers and production SSH hosts.
-- Least-privilege MongoDB application user.
-- Automated TLS renewal and consistent encrypted off-host database backup plus
-  current-schema isolated-restore validation tooling.
-- Shared MongoDB-backed rate limiting for abuse-sensitive API flows.
-- Dedicated metrics, logs, dashboards, restricted ingestion, cross-host
-  freshness/capacity alerts, and Telegram delivery-drill tooling.
-- Main-only, host-serialized, preflighted deployment with application and edge
-  rollback paths.
-- A canonical localized legal source, generated public documents, exact API
-  vendoring, and deployment digest checks at both public origins.
-- Ruff, Pyright, pytest, Docker, and iOS unit/build CI across implementation
-  repositories; gesture and cross-version UI coverage remains a launch task.
+## Before public launch
 
-## Before broad public launch
+- Complete Apple Developer enrollment, signing, TestFlight and App Review
+- Finish accessibility and supported-device regression testing
+- Run current-schema restore and full-service recovery drills
+- Capture production attestation and rollback evidence
+- Calibrate alerts and assign moderation response ownership
 
-- Obtain the Apple Developer account, configure production signing, and complete
-  TestFlight/App Store review assets and privacy declarations.
-- Schedule recurring restore drills and run a complete service recovery
-  exercise.
-- Run a current-schema encrypted production-snapshot restore in isolation and
-  record observed backup age and restore time.
-- Capture the full production read-only attestation and exercise a dated
-  non-production or controlled rollback against the frozen release.
-- Complete restricted-ingest and Grafana-key migrations, require fresh host
-  state, and observe both firing/resolved Telegram drill messages.
-- Complete release-candidate regression, accessibility, and TestFlight testing.
-- Calibrate monitoring thresholds under normal production traffic.
-- Define moderation response ownership, escalation, and retention review.
+Later work includes stronger BLE privacy, broader integration/UI testing,
+moderation tooling and dependency enforcement. Android and reliable remote
+logout remain deferred.
 
-## Next engineering priorities
-
-| Area | Work | State |
-| --- | --- | --- |
-| Migration | Production workflows applied the current migrations and prohibit legacy auth; retain a sanitized invariant attestation with the release evidence | Deployed; evidence retention pending |
-| API quality | Expand real MongoDB/S3 integration and chaos coverage beyond the implemented deterministic saga/failure suites | Planned |
-| Supply chain | Enable monitoring dependency alerts and pin Python image/build inputs to reviewed immutable revisions | Planned |
-| BLE protocol | Version the protocol and investigate rotating authenticated identifiers | Research |
-| Notifications | Add APNs only after Apple account availability and a clear aggregation/privacy design | Deferred |
-| Moderation | Add case search, roles, and appeals only when usage requires them | Later |
-| Repository controls | Upgrade plan or add independent enforcement for private-repo PR/CI/secret gates | Planned |
-| iOS quality | Add an iOS 18/26 device matrix and XCUITest coverage for swipe, hold, navigation-bar, and context-menu behavior | Planned |
-| Android | Implement only after the BLE contract is versioned and stable | Later |
-
-## Explicit non-goals for the current MVP
-
-- GPS tracking or movement history.
-- Reading Telegram contacts or messages.
-- Precise physical-distance guarantees.
-- Public Swagger or internal bot endpoints.
-- Remote multi-device logout without reliable delivery.
-- A public release of the core implementation repositories.
-
-## Documentation split
-
-`Telescan-info` contains public product and legal material only. Architecture,
-operations, risks, moderation internals, deployment details, and engineering
-roadmap belong in this private repository.
+Non-goals: GPS tracking, precise distance, Telegram message/contact access,
+public internal endpoints and public implementation repositories.

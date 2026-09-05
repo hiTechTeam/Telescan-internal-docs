@@ -1,114 +1,34 @@
 # App Review Runbook
 
-**Last reviewed: September 2, 2026.**
+**Last reviewed: September 5, 2026.**
 
-## Review setup
+## Accounts and codes
 
-Use two dedicated Telegram profiles containing no personal data:
+Prepare **Telescan Review A/B** without personal data. Each needs a public
+Telegram username, protected access and one `/start` with the production bot.
 
-- `Telescan Review A` is the primary reviewer identity.
-- `Telescan Review B` is the second identity for optional two-device BLE testing.
+Issue separate 90-day single-use code batches. Store them only in App Store
+Connect and revoke unused codes. Never commit review credentials.
 
-Both profiles must have a public Telegram username, two-step verification, and
-continued access to their phone numbers through review and any appeal. Start the
-production Telescan bot once from each profile before preparing the submission.
-Never commit Telegram IDs, Telescan IDs, clear review codes, phone numbers, or
-App Store Connect contact details.
-
-Issue a separate batch of ten single-use codes for each review profile, valid
-for 90 days, and provide them privately in App Store Connect. Do not test these
-codes with a personal Apple identity: the first successful link reserves that
-Telegram profile for the Apple identity used during the test. Verify the normal
-linking flow with a separate non-review profile, confirm each review batch by
-its server-side status, and revoke all unused codes after review.
-
-A review profile can be attached to only one Apple identity at a time. Multiple
-codes from the same batch support retries or reinstalls using the same Apple
-subject; they do not attach the same Telegram profile to unrelated Apple
-identities. Use Review A and Review B for independent identities and two-device
-BLE testing.
-
-The App Store archive must be signed by the publishing company's paid Apple
-Developer team. Replace the local Personal Team identifier before archiving,
-confirm that `hiTeam.TelescaniOS` is registered for that team with Sign in with
-Apple enabled, and use a build number that has not already been uploaded.
+The archive must use the paid publishing team, bundle ID
+`hiTeam.TelescaniOS`, Sign in with Apple and a new build number.
 
 ## Reviewer path
 
-1. Install and open Telescan on an iPhone running iOS 17.6 or later.
-2. Tap **Continue** on the welcome screen.
-3. Authenticate the primary Telescan account with **Sign in with Apple**.
-4. Enter one unused eight-character review code and tap **Link**. Scanning is
-   enabled automatically after registration; allow Bluetooth access when asked.
-5. For the normal Telegram-linking flow, tap **Telescan_bot** on the code screen, press
-   **Start** in Telegram, then return to Telescan and enter the code sent by the
-   bot.
-6. BLE discovery requires two physical devices. Use Review A and Review B on
-   separate devices, enable scanning on both, and keep both apps running.
-
-## App Review Notes template
-
-```text
-Telescan uses Sign in with Apple for primary account authentication. A verified
-Telegram identity and a public Telegram username are then linked as the profile
-that nearby users can open. Telegram is not used as the primary sign-in method.
-
-Normal sign-in flow:
-1. Open Telescan and tap Continue.
+1. Open Telescan on iOS 17.6+ and tap **Continue**.
 2. Complete Sign in with Apple.
-3. On the Telegram screen, tap Telescan_bot.
-4. In Telegram, press Start to receive a short-lived, single-use linking code.
-5. Return to Telescan, enter the code, and tap Link.
-6. Allow Bluetooth access when asked; nearby discovery starts automatically.
+3. Enter one unused review code and tap **Link**.
+4. Allow Bluetooth access.
+5. For BLE testing, use Review A and B on two physical iPhones.
 
-For App Review, use any one of the single-use codes below. Each code links only
-to a dedicated review profile containing no real user data. A code becomes
-invalid immediately after one successful use. A reinstall using the same Apple
-review identity may use the next unused code for that profile. A different
-Apple identity must use the second review profile.
+## Review notes
 
-Codes expire at REVIEW_CODE_EXPIRY_UTC.
+State that Apple authenticates and Telegram supplies the public profile. Add:
 
-Primary profile — Telescan Review A (@REVIEW_A_USERNAME):
-REVIEW_A_CODE_1
-REVIEW_A_CODE_2
-REVIEW_A_CODE_3
-REVIEW_A_CODE_4
-REVIEW_A_CODE_5
-REVIEW_A_CODE_6
-REVIEW_A_CODE_7
-REVIEW_A_CODE_8
-REVIEW_A_CODE_9
+- the steps above;
+- expiry time and unused codes for Review A/B;
+- the two-device BLE requirement and [demonstration video](https://github.com/user-attachments/assets/a3910e7c-c475-40b3-a3c3-43ab5ea79c30);
+- `https://tgtelescan.ru/privacy` and `/terms`;
+- `admin@tgtelescan.ru` as the monitored contact.
 
-Optional second profile for two-device BLE testing — Telescan Review B
-(@REVIEW_B_USERNAME):
-REVIEW_B_CODE_1
-REVIEW_B_CODE_2
-REVIEW_B_CODE_3
-REVIEW_B_CODE_4
-REVIEW_B_CODE_5
-REVIEW_B_CODE_6
-REVIEW_B_CODE_7
-REVIEW_B_CODE_8
-REVIEW_B_CODE_9
-
-Bluetooth discovery requires two physical devices. Demonstration video:
-https://github.com/user-attachments/assets/a3910e7c-c475-40b3-a3c3-43ab5ea79c30
-
-Privacy Policy: https://tgtelescan.ru/privacy
-Terms of Service: https://tgtelescan.ru/terms
-Support contact: admin@tgtelescan.ru
-```
-
-## Final checks
-
-- Production API, bot, privacy policy, and terms are reachable.
-- Account deletion succeeds from the in-app profile menu.
-- The normal two-device BLE flow succeeds with non-review test profiles; the
-  dedicated review profiles remain unlinked until Apple begins review.
-- The submitted video shows permissions, scanning, discovery, and profile
-  opening without exposing phone numbers or private chats.
-- App Store privacy answers match the shipped privacy manifest and policy.
-- Review notes contain only currently unused codes and a monitored contact.
-- The archive uses the publishing company team, the production entitlement,
-  and a build number not previously uploaded to App Store Connect.
+Verify API/bot/legal pages, deletion, two-device BLE, privacy answers and signing.
